@@ -15,6 +15,7 @@
         .header { background-color: #2c3e50; color: white; padding: 20px; margin-bottom: 20px; }
         .timestamp { font-style: italic; color: #7f8c8d; margin-bottom: 20px; }
         pre { background-color: #f8f8f8; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .loading { text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
@@ -24,125 +25,178 @@
         </div>
     </div>
     <div class="container">
-        <div class="timestamp">Generated on: 2025-04-14 16:51:21</div>
-        <pre>
-========== SIMULATION RESULTS ==========
-Cloudlets Executed: 20 of 20
-Average Cloudlet Execution Time: 25.881 seconds
-
-VM Execution Details:
--------------------------------------------------
-VM ID | Execution Time (s) | Average Cloudlets
--------------------------------------------------
-   0  |                 0 |                4
-   1  |                 0 |                4
-   2  |                 0 |                4
-   3  |                 0 |                4
-   4  |                 0 |                4
--------------------------------------------------
-
-========== AUTO-SCALING STATISTICS ==========
-VM Scaling Summary:
---------------------------------------------------
-VM ID | Original PEs | Final PEs | Scaling Events
---------------------------------------------------
-   0  |           2 |         3 |              7
-   1  |           2 |         3 |              7
-   2  |           2 |         3 |              7
-   3  |           2 |         3 |              7
-   4  |           2 |         3 |              8
---------------------------------------------------
-
-Detailed Scaling Events:
------------------------------------------------------------------------
-Time | VM ID | CPU Util | Old PEs | New PEs | Old Host | New Host
------------------------------------------------------------------------
-   7 |     4 |  71.102% |       2 |       3 |        0 |        1
-   8 |     1 |  70.322% |       2 |       3 |        0 |        0
-   9 |     0 |  71.849% |       2 |       3 |        0 |        0
-  10 |     2 |  77.915% |       2 |       3 |        0 |        2
-  10 |     3 |  71.369% |       2 |       3 |        0 |        0
-  12 |     4 |  75.321% |       2 |       3 |        1 |        1
-  13 |     1 |  75.127% |       2 |       3 |        0 |        0
-  14 |     0 |  80.412% |       2 |       3 |        0 |        0
-  15 |     2 |  83.487% |       2 |       3 |        2 |        2
-  15 |     3 |  82.837% |       2 |       3 |        0 |        0
-  17 |     4 |  84.664% |       2 |       3 |        1 |        1
-  18 |     1 |  90.185% |       2 |       3 |        0 |        0
-  19 |     0 |  85.511% |       2 |       3 |        0 |        0
-  20 |     2 |  83.781% |       2 |       3 |        2 |        2
-  20 |     3 |   84.08% |       2 |       3 |        0 |        0
-  22 |     4 |  86.953% |       2 |       3 |        1 |        1
-  23 |     1 |  92.311% |       2 |       3 |        0 |        0
-  24 |     0 |  94.137% |       2 |       3 |        0 |        0
-  25 |     2 |  87.407% |       2 |       3 |        2 |        2
-  25 |     3 |  86.415% |       2 |       3 |        0 |        0
-  27 |     4 |  89.853% |       2 |       3 |        1 |        1
-  28 |     1 |   86.27% |       2 |       3 |        0 |        0
-  29 |     0 |  89.967% |       2 |       3 |        0 |        0
-  30 |     2 |   90.31% |       2 |       3 |        2 |        2
-  30 |     3 |  86.014% |       2 |       3 |        0 |        0
-  32 |     4 |  81.519% |       2 |       3 |        1 |        1
-  33 |     1 |  81.116% |       2 |       3 |        0 |        0
-  34 |     0 |  82.282% |       2 |       3 |        0 |        0
-  35 |     2 |   78.64% |       2 |       3 |        2 |        2
-  35 |     3 |  80.396% |       2 |       3 |        0 |        0
-  37 |     4 |  74.516% |       2 |       3 |        1 |        1
-  38 |     1 |  74.824% |       2 |       3 |        0 |        0
-  39 |     0 |  76.457% |       2 |       3 |        0 |        0
-  40 |     2 |  77.763% |       2 |       3 |        2 |        2
-  40 |     3 |  77.384% |       2 |       3 |        0 |        0
-  42 |     4 |  71.027% |       2 |       3 |        1 |        1
------------------------------------------------------------------------
-
-Current VM Utilization:
-------------------------
-VM ID | CPU Utilization
-------------------------
-   4  |        71.102%
-   3  |        80.396%
-   0  |        48.786%
-   2  |        47.969%
-   2  |        77.915%
-   4  |        51.094%
-   4  |        74.516%
-   3  |        77.384%
-   2  |        83.781%
-   0  |        89.967%
-   0  |        80.412%
-   2  |         90.31%
-   1  |         86.27%
-   4  |        75.321%
-   4  |        89.853%
-   1  |        81.116%
-   1  |         45.77%
-   0  |        82.282%
-   2  |        77.763%
-   1  |        90.185%
-   3  |        82.837%
-   2  |        87.407%
-   1  |        75.127%
-   3  |        86.415%
-   0  |        94.137%
-   4  |        84.664%
-   0  |        76.457%
-   0  |        71.849%
-   3  |         84.08%
-   4  |        86.953%
-   1  |        70.322%
-   3  |        86.014%
-   3  |        71.369%
-   4  |        81.519%
-   2  |        83.487%
-   4  |        71.027%
-   1  |        92.311%
-   0  |        85.511%
-   2  |         78.64%
-   1  |        74.824%
-   3  |         49.71%
-------------------------
-</pre>
-        <p>The simulation results are also available in CSV format <a href="simulation_results.csv">here</a>.</p>
+        <div id="timestamp" class="timestamp">Loading simulation timestamp...</div>
+        
+        <h2>Simulation Summary</h2>
+        <div id="cloudlet-summary"></div>
+        
+        <h2>VM Execution Details</h2>
+        <div id="vm-execution"></div>
+        
+        <h2>Auto-Scaling Statistics</h2>
+        <div id="auto-scaling"></div>
+        
+        <h2>Detailed Scaling Events</h2>
+        <div id="scaling-events"></div>
+        
+        <h2>Current VM Utilization</h2>
+        <div id="vm-utilization"></div>
     </div>
+
+    <script>
+        // Function to fetch and parse CSV data
+        async function fetchCsvData() {
+            try {
+                const response = await fetch('simulation_results.csv');
+                const csvText = await response.text();
+                return parseCsv(csvText);
+            } catch (error) {
+                console.error('Error fetching CSV:', error);
+                document.body.innerHTML = '<div class="container"><h2>Error loading simulation data</h2><p>Please make sure simulation_results.csv exists and is accessible.</p></div>';
+            }
+        }
+
+        // Simple CSV parser function
+        function parseCsv(text) {
+            const sections = {};
+            let currentSection = null;
+            let headers = [];
+            
+            const lines = text.split('\n');
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                // Skip empty lines
+                if (!line) continue;
+                
+                // Check if this is a section header (all caps with no commas)
+                if (line.toUpperCase() === line && !line.includes(',')) {
+                    currentSection = line;
+                    sections[currentSection] = {
+                        headers: [],
+                        data: []
+                    };
+                    // The next line should be headers
+                    if (i + 1 < lines.length) {
+                        headers = lines[i + 1].split(',');
+                        sections[currentSection].headers = headers;
+                        i++; // Skip the header line in the next iteration
+                    }
+                } else if (currentSection && line.includes(',')) {
+                    // This is a data line
+                    const values = line.split(',');
+                    const row = {};
+                    
+                    // Create an object with the headers as keys
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] || '';
+                    });
+                    
+                    sections[currentSection].data.push(row);
+                } else if (currentSection === 'SIMULATION_RESULTS' && line.startsWith('Timestamp')) {
+                    // Special handling for timestamp
+                    sections.timestamp = line.split(',')[1];
+                }
+            }
+            
+            return sections;
+        }
+
+        // Function to create a table from data
+        function createTable(headers, data) {
+            const table = document.createElement('table');
+            
+            // Create header row
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header.replace(/_/g, ' ');
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Create data rows
+            const tbody = document.createElement('tbody');
+            
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            return table;
+        }
+
+        // Main function to load and display data
+        async function loadData() {
+            const data = await fetchCsvData();
+            
+            if (data) {
+                // Set timestamp
+                if (data.timestamp) {
+                    document.getElementById('timestamp').textContent = `Generated on: ${data.timestamp}`;
+                }
+                
+                // Cloudlet execution summary
+                if (data.CLOUDLET_EXECUTION_SUMMARY) {
+                    const summaryDiv = document.getElementById('cloudlet-summary');
+                    summaryDiv.appendChild(createTable(
+                        data.CLOUDLET_EXECUTION_SUMMARY.headers,
+                        data.CLOUDLET_EXECUTION_SUMMARY.data
+                    ));
+                }
+                
+                // VM execution details
+                if (data.VM_EXECUTION_DETAILS) {
+                    const vmDiv = document.getElementById('vm-execution');
+                    vmDiv.appendChild(createTable(
+                        data.VM_EXECUTION_DETAILS.headers,
+                        data.VM_EXECUTION_DETAILS.data
+                    ));
+                }
+                
+                // Auto-scaling statistics
+                if (data.AUTO_SCALING_STATISTICS) {
+                    const autoScalingDiv = document.getElementById('auto-scaling');
+                    autoScalingDiv.appendChild(createTable(
+                        data.AUTO_SCALING_STATISTICS.headers,
+                        data.AUTO_SCALING_STATISTICS.data
+                    ));
+                }
+                
+                // Detailed scaling events
+                if (data.DETAILED_SCALING_EVENTS) {
+                    const eventsDiv = document.getElementById('scaling-events');
+                    eventsDiv.appendChild(createTable(
+                        data.DETAILED_SCALING_EVENTS.headers,
+                        data.DETAILED_SCALING_EVENTS.data
+                    ));
+                }
+                
+                // Current VM utilization
+                if (data.CURRENT_VM_UTILIZATION) {
+                    const utilizationDiv = document.getElementById('vm-utilization');
+                    utilizationDiv.appendChild(createTable(
+                        data.CURRENT_VM_UTILIZATION.headers,
+                        data.CURRENT_VM_UTILIZATION.data
+                    ));
+                }
+            }
+        }
+
+        // Load data when page loads
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
 </body>
 </html>
