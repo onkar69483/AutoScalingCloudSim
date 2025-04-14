@@ -5,50 +5,63 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   build-and-run:
     runs-on: ubuntu-latest
     
-    # Add permissions for the deployment
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-    
     steps:
+    # Step 1: Checkout code
     - name: Checkout Repository
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Important for deployment action
     
+    # Step 2: Set up Java
     - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'temurin'
+        distribution: 'temurin'  # OpenJDK distribution
     
+    # Step 3: Create required directories
     - name: Create directories
       run: |
         mkdir -p bin
         mkdir -p results
     
+    # Step 4: Compile the code
     - name: Compile code
-      run: javac -cp "lib/cloudsim-3.0.3.jar" -d bin src/org/cloudbus/cloudsim/*.java
+      run: javac -Xlint:unchecked -cp "lib/cloudsim-3.0.3.jar" -d bin src/org/cloudbus/cloudsim/*.java
     
+    # Step 5: Run the simulation
     - name: Run simulation
       run: java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
     
-    - name: Create docs directory for GitHub Pages
+    # Step 6: Prepare GitHub Pages (only on main/master)
+    - name: Prepare GitHub Pages
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       run: |
         mkdir -p docs
         cp -r results/* docs/ || echo "No results to copy"
-        touch docs/.nojekyll
-        echo "theme: none" > docs/_config.yml
-        echo "<html><head><title>CloudSim Simulation Results</title><style>body{font-family:Arial,sans-serif;margin:40px}</style></head><body><h1>CloudSim Simulation Results</h1><p>View the <a href='simulation_results.csv'>simulation results</a>.</p></body></html>" > docs/index.html
+        touch docs/.nojekyll  # Disable Jekyll processing
+        # Create simple index.html
+        echo "<html>
+          <head>
+            <title>CloudSim Simulation Results</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6 }
+              table { border-collapse: collapse; width: 100% }
+              th, td { border: 1px solid #ddd; padding: 8px; text-align: left }
+              th { background-color: #f2f2f2 }
+            </style>
+          </head>
+          <body>
+            <h1>CloudSim Simulation Results</h1>
+            <p>View the <a href='simulation_results.csv'>simulation results</a>.</p>
+          </body>
+        </html>" > docs/index.html
     
+    # Step 7: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       uses: JamesIves/github-pages-deploy-action@v4
@@ -56,4 +69,3 @@ jobs:
         folder: docs
         branch: gh-pages
         clean: true
-        token: ${{ secrets.ACCESS_TOKEN }}  # Must match your secret name exactly
