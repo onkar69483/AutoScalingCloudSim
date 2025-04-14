@@ -1,38 +1,36 @@
 # ⚡ Auto-Scaling and Load-Aware VM Allocation in CloudSim
 
-A simulation project built on **CloudSim 3.0.3**, focused on dynamic resource allocation using auto-scaling strategies and efficient VM placement through load-aware allocation policies.
+A simulation project built on **CloudSim 3.0.3** that demonstrates dynamic resource allocation using auto-scaling strategies and efficient VM placement through utilization-aware allocation policies.
 
 ---
 
 ## 📘 Overview
 
-This project simulates **auto-scaling and load-balancing** in a cloud datacenter environment. It demonstrates the effectiveness of dynamic VM scaling strategies based on workload demands and intelligent VM placement.
+This project simulates **auto-scaling and load-balancing** in a cloud datacenter environment. It dynamically adjusts VM resources based on real-time CPU utilization and tracks performance metrics throughout the simulation lifecycle.
 
 Key aspects include:
-
-- Dynamic VM allocation based on current host utilization
-- Auto-scaling based on resource utilization metrics
-- Real-time workload generation and monitoring
-- HTML and CSV result reporting
-- Self-adjusting infrastructure
+- Dynamic VM scaling based on CPU utilization thresholds
+- VM migration across hosts when necessary
+- Detailed tracking of scaling events and utilization patterns
+- Comprehensive HTML and CSV reporting of simulation results
 
 ---
 
 ## ✨ Features
 
-- ✅ **Dynamic Load-Aware VM Allocation**
-- 🔄 **Auto-Scaling up/down based on utilization thresholds**
-- 📊 **Host-level utilization metrics monitoring**
-- ⚙️ **Load balancing across heterogeneous hosts**
-- 📈 **Automatic results generation in CSV/HTML**
+- ✅ **Auto-Scaling VM Allocation Policy** - Dynamically adjusts VM resources based on utilization
+- 📊 **Resource Utilization Monitoring** - Tracks CPU usage in real-time during simulation
+- 🔄 **VM Migration** - Relocates VMs between hosts when scaling requires more resources
+- 📈 **Comprehensive Results Reporting** - Generates detailed HTML and CSV output
+- ⚙️ **Customizable Parameters** - Configurable simulation settings via Constants class
 
 ---
 
 ## 🖥 Requirements
 
-- **Java JDK** 11+ (compatible with JDK 21)
+- **Java JDK** 11+
 - **CloudSim 3.0.3** (included in `/lib`)
-- **Maven 3.x+** (optional, for building with pom.xml)
+- **Maven** (optional, for building with pom.xml)
 
 ---
 
@@ -42,22 +40,18 @@ Key aspects include:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/autoscaling-cloudsim.git
-cd autoscaling-cloudsim
+git clone https://github.com/yourusername/AutoScalingCloudSim.git
+cd AutoScalingCloudSim
 
 # Create directories
-mkdir -p lib
-mkdir -p out
+mkdir -p bin
 mkdir -p results
 
-# Place cloudsim-3.0.3.jar in the lib directory
-# (Download or copy from your CloudSim installation)
-
 # Compile the project
-javac -cp "lib/cloudsim-3.0.3.jar" -d out src/org/cloudbus/cloudsim/*.java src/org/cloudbus/cloudsim/utils/*.java
+javac -Xlint:unchecked -cp "lib/cloudsim-3.0.3.jar" -d bin src/org/cloudbus/cloudsim/*.java
 
 # Run the simulation
-java -cp "out;lib/cloudsim-3.0.3.jar" org.cloudbus.cloudsim.AutoScalingSimulation
+java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
 ```
 
 ### ✅ Build and Run with Maven
@@ -67,31 +61,34 @@ java -cp "out;lib/cloudsim-3.0.3.jar" org.cloudbus.cloudsim.AutoScalingSimulatio
 mvn clean package
 
 # Run the simulation
-java -jar target/autoscaling-cloudsim-1.0.0.jar
+java -jar target/autoscaling-cloudsim-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
 ---
 
 ## 🔧 Understanding the Simulation
 
-1. The simulation creates a datacenter with multiple hosts and VMs
-2. A load-aware VM allocation policy places VMs on hosts based on CPU utilization
-3. Auto-scaling is performed periodically based on utilization thresholds
-4. New workloads (cloudlets) are generated randomly during simulation
-5. Results are written to CSV files and a HTML report
+The simulation implements an auto-scaling strategy that adjusts VM resources based on CPU utilization:
+
+1. **DatacenterBroker** periodically updates VM utilization (simulating real-world load patterns)
+2. **AutoScalingVmAllocationPolicy** monitors VM resource usage and performs scaling actions
+3. When utilization exceeds thresholds, VMs are scaled up/down by adjusting PE (Processing Element) allocations
+4. If necessary, VMs are migrated to hosts with sufficient resources
+5. Detailed events and metrics are recorded throughout the process
 
 ### 🔍 Auto-Scaling Strategy
 
-- When average CPU utilization > 80% → Scale UP (add VMs)
-- When average CPU utilization < 30% → Scale DOWN (remove idle VMs)
-- Monitoring occurs every 5 simulation seconds
+- **Scale UP**: When CPU utilization exceeds the upper threshold
+- **Scale DOWN**: When CPU utilization falls below the lower threshold
+- **Monitoring Interval**: Defined by `SCHEDULING_INTERVAL` in Constants class
 
-### 💡 Load-Aware VM Allocation
+### 💡 VM Allocation Policy
 
-VMs are allocated to hosts with the lowest current CPU utilization that have sufficient resources, which:
-- Prevents hotspots
-- Balances workload across hosts
-- Maximizes resource efficiency
+The `AutoScalingVmAllocationPolicy` class implements:
+- Dynamic resource allocation based on utilization
+- VM migration to balance load across hosts
+- Event tracking for scaling operations
+- Utilization history recording
 
 ---
 
@@ -99,14 +96,15 @@ VMs are allocated to hosts with the lowest current CPU utilization that have suf
 
 After running the simulation, check the `results` directory for:
 
-1. **cloudlet_results.csv** - Performance metrics for all cloudlets
-2. **vm_allocation.csv** - VM distribution and host utilization
-3. **index.html** - Visual HTML report of simulation results
+1. **index.html** - Detailed HTML report with simulation metrics
+2. **simulation_results.csv** - CSV data for further analysis
 
-The HTML report shows:
-- Cloudlet execution details
-- Summary statistics
-- Simulation metrics
+The HTML report includes:
+- Cloudlet execution summary
+- VM execution details
+- Auto-scaling statistics
+- Detailed scaling events
+- Current VM utilization
 
 ---
 
@@ -114,12 +112,12 @@ The HTML report shows:
 
 To modify simulation parameters, edit the `Constants.java` file:
 
-- `SCALE_UP_THRESHOLD` - CPU utilization threshold for scaling up (default: 80%)
-- `SCALE_DOWN_THRESHOLD` - CPU utilization threshold for scaling down (default: 30%)
-- `MONITORING_INTERVAL` - Time between auto-scaling checks (default: 5s)
-- `INITIAL_HOST_COUNT` - Number of hosts to create initially
-- `INITIAL_VM_COUNT` - Number of VMs to create initially
-- `MAX_VM_COUNT` - Maximum number of VMs allowed
+- `HOSTS` - Number of hosts in the datacenter
+- `VMS` - Initial number of VMs
+- `CLOUDLETS` - Number of cloudlets (tasks) to simulate
+- `SIMULATION_LIMIT` - Maximum simulation time
+- `SCHEDULING_INTERVAL` - Frequency of utilization checks and scaling events
+- Resource specifications (MIPS, RAM, BW, etc.)
 
 ---
 
@@ -127,24 +125,47 @@ To modify simulation parameters, edit the `Constants.java` file:
 
 ```
 AutoScalingCloudSim/
-├── lib/
-│   └── cloudsim-3.0.3.jar
+├── .github/
+│   └── workflows/
+│       └── cloudsim-pipeline.yml      # CI/CD pipeline configuration
+├── bin/                               # Compiled classes
+├── lib/                               # CloudSim libraries
+│   ├── cloudsim-3.0.3.jar
+│   ├── cloudsim-examples-3.0.3.jar
+│   └── cloudsim-3.0.3-sources.jar
+├── results/                           # Simulation output
+│   ├── index.html                     # HTML report
+│   └── simulation_results.csv         # CSV data
 ├── src/
 │   └── org/
 │       └── cloudbus/
 │           └── cloudsim/
-│               ├── AutoScalingSimulation.java
-│               ├── LoadAwareVmAllocationPolicy.java
-│               └── utils/
-│                   ├── Constants.java
-│                   └── CsvWriter.java
-├── results/
-│   ├── cloudlet_results.csv
-│   ├── vm_allocation.csv
-│   └── index.html
-├── pom.xml
+│               ├── AutoScalingVmAllocationPolicy.java
+│               ├── CloudletGenerator.java
+│               ├── Constants.java
+│               └── Main.java
+├── pom.xml                            # Maven build configuration
 └── README.md
 ```
+
+---
+
+## 🔑 Key Components
+
+- **Main.java** - Entry point and simulation controller
+- **AutoScalingVmAllocationPolicy.java** - Implements the dynamic scaling logic
+- **CloudletGenerator.java** - Creates and configures cloudlet workloads
+- **Constants.java** - Defines simulation parameters and thresholds
+
+---
+
+## 📊 GitHub Pages Integration
+
+The project includes a CI/CD pipeline that:
+1. Builds and runs the simulation on each push
+2. Generates simulation results
+3. Deploys the results to GitHub Pages
+4. Makes simulation reports available online
 
 ---
 
@@ -153,8 +174,9 @@ AutoScalingCloudSim/
 Potential improvements:
 - Implement predictive scaling based on workload patterns
 - Add more sophisticated VM consolidation algorithms
-- Include power models for energy consumption analysis
-- Develop a graphical UI for simulation monitoring
+- Include power consumption analysis
+- Support for heterogeneous host configurations
+- Enhanced visualization of simulation results
 
 ---
 
@@ -164,11 +186,13 @@ Common issues:
 
 **1. ClassNotFoundException**
 - Ensure cloudsim-3.0.3.jar is in the lib directory
-- Check your classpath includes both the compiled classes and the jar
+- Check your classpath includes both the compiled classes and the jar files
 
-**2. Compilation Errors**
-- Make sure you're using Java 11+ 
-- Verify all source files are included in compilation
-
-**3. No Results Generated**
+**2. Blank Results Page**
+- Make sure the simulation completes successfully before results are generated
 - Check if the `results` directory exists and is writable
+- Verify that the CI/CD pipeline is properly copying simulation results to the docs directory
+
+**3. GitHub Pages Not Updating**
+- Confirm the GitHub Pages source is set to the gh-pages branch
+- Check workflow run logs for deployment errors
