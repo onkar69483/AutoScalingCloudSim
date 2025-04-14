@@ -12,7 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Get full git history
     
     - name: Set up JDK 11
       uses: actions/setup-java@v3
@@ -20,26 +23,25 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     
-    - name: Create results directory
-      run: mkdir -p results
+    - name: Create directories
+      run: |
+        mkdir -p bin
+        mkdir -p results
     
     - name: Compile code
       run: javac -Xlint:unchecked -cp "lib/cloudsim-3.0.3.jar" -d bin src/org/cloudbus/cloudsim/*.java
     
+    - name: Verify compiled classes
+      run: ls -R bin
+    
     - name: Run simulation
+      run: java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
+    
+    - name: Commit Updated Results
       run: |
-        # Fix path separator for Linux
-        java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
-    
-    - name: Upload simulation results
-      uses: actions/upload-artifact@v3
-      with:
-        name: simulation-results
-        path: results/
-    
-    - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: results
-        branch: gh-pages
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        git add results/index.html results/simulation_results.csv || echo "Nothing to add"
+        git commit -m "Auto-update simulation report [skip ci]" || echo "No changes to commit"
+        git push origin HEAD:${{ github.ref }} || echo "Nothing to push"
