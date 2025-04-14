@@ -38,9 +38,7 @@ jobs:
         mkdir -p docs
         cp -r results/* docs/
         touch docs/.nojekyll
-        # Simplified _config.yml to avoid Jekyll processing
         echo "theme: none" > docs/_config.yml
-        # Basic HTML file that doesn't require any processing
         echo "<html><head><title>CloudSim Simulation Results</title><style>body{font-family:Arial,sans-serif;margin:40px}</style></head><body><h1>CloudSim Simulation Results</h1><p>View the <a href='simulation_results.csv'>simulation results</a>.</p></body></html>" > docs/index.html
     
     - name: Deploy to GitHub Pages
@@ -50,3 +48,4 @@ jobs:
         folder: docs
         branch: gh-pages
         clean: true
+        token: ${{ secrets.ACCESS_TOKEN }}  # This is the critical addition
