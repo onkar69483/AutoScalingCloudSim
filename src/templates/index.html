@@ -1,93 +1,91 @@
-name: CloudSim CI/CD Pipeline
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudSim Auto-Scaling Simulation Results</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>CloudSim Auto-Scaling Simulation Results</h1>
+            <div id="timestamp" class="timestamp">Loading simulation timestamp...</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="dashboard">
+            <div class="dashboard-card">
+                <h3>Total Cloudlets</h3>
+                <div id="total-cloudlets" class="dashboard-value">-</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Executed Cloudlets</h3>
+                <div id="executed-cloudlets" class="dashboard-value">-</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Average Execution Time</h3>
+                <div id="avg-execution-time" class="dashboard-value">-</div>
+                <div class="unit">seconds</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Total Scaling Events</h3>
+                <div id="total-scaling-events" class="dashboard-value">-</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <div class="panel">
+                    <h2>VM Resource Utilization</h2>
+                    <div class="chart-container">
+                        <canvas id="utilization-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="panel">
+                    <h2>Scaling Events Timeline</h2>
+                    <div class="chart-container">
+                        <canvas id="scaling-timeline-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <div class="panel">
+                    <h2>VM Execution Details</h2>
+                    <div class="table-responsive" id="vm-execution"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>Auto-Scaling Statistics</h2>
+            <div class="table-responsive" id="auto-scaling"></div>
+        </div>
+        
+        <div class="panel">
+            <h2>Detailed Scaling Events</h2>
+            <div class="table-responsive" id="scaling-events"></div>
+        </div>
+        
+        <div class="panel">
+            <h2>Current VM Utilization</h2>
+            <div class="table-responsive" id="vm-utilization"></div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 CloudSim Auto-Scaling Simulation. Generated with GitHub Actions CI/CD Pipeline.</p>
+        </div>
+    </footer>
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch:
-
-jobs:
-  build-and-run:
-    runs-on: ubuntu-latest
-    
-    steps:
-    # Step 1: Checkout code
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-    
-    # Step 2: Set up Java
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-    
-    # Step 3: Create directories
-    - name: Create directories
-      run: |
-        mkdir -p bin
-        mkdir -p results
-    
-    # Step 4: Create static index.html file if it doesn't exist
-    - name: Ensure static index.html exists
-      run: |
-        if [ ! -f "results/index.html" ]; then
-          echo "Creating static index.html file"
-          cp src/templates/index.html results/index.html || echo "No template found, will be created in next step"
-        fi
-    
-    # Step 5: Compile the code
-    - name: Compile code
-      run: javac -Xlint:unchecked -cp "lib/cloudsim-3.0.3.jar" -d bin src/org/cloudbus/cloudsim/*.java
-    
-    # Step 6: Run the simulation
-    - name: Run simulation
-      run: java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
-    
-    # Step 7: Debug the results directory
-    - name: Debug results directory
-      run: |
-        ls -la results/
-        if [ -f "results/simulation_results.csv" ]; then
-          head -20 results/simulation_results.csv
-        else
-          echo "simulation_results.csv not found!"
-        fi
-    
-    # Step 8: Create static index.html if needed
-    - name: Ensure index.html exists
-      run: |
-        if [ ! -f "results/index.html" ]; then
-          echo "<!DOCTYPE html><html><head><title>CloudSim Results</title></head><body><h1>CloudSim Results</h1><p>Please check the CSV file for results.</p></body></html>" > results/index.html
-        fi
-    
-    # Step 9: Create GitHub Pages content
-    - name: Prepare GitHub Pages directory
-      run: |
-        # Create the docs directory
-        mkdir -p docs
-        
-        # Copy actual simulation results
-        cp results/index.html docs/index.html
-        cp results/simulation_results.csv docs/simulation_results.csv
-        
-        # Copy any other assets needed for the webpage
-        if [ -d "src/assets" ]; then
-          mkdir -p docs/assets
-          cp -r src/assets/* docs/assets/
-        fi
-        
-        # Create .nojekyll file to disable Jekyll processing
-        touch docs/.nojekyll
-        
-        # Check the contents of the docs directory
-        echo "Contents of docs directory:"
-        ls -la docs/
-    
-    # Step 10: Deploy to GitHub Pages
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: docs
-        branch: gh-pages
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

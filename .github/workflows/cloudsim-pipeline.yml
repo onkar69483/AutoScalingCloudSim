@@ -29,13 +29,13 @@ jobs:
         mkdir -p bin
         mkdir -p results
     
-    # Step 4: Create static index.html file if it doesn't exist
-    - name: Ensure static index.html exists
+    # Step 4: Copy web files from templates to results
+    - name: Copy web files
       run: |
-        if [ ! -f "results/index.html" ]; then
-          echo "Creating static index.html file"
-          cp src/templates/index.html results/index.html || echo "No template found, will be created in next step"
-        fi
+        mkdir -p src/templates
+        cp -f src/templates/index.html results/index.html || echo "No template index.html found"
+        cp -f src/templates/styles.css results/styles.css || echo "No template styles.css found"
+        cp -f src/templates/script.js results/script.js || echo "No template script.js found"
     
     # Step 5: Compile the code
     - name: Compile code
@@ -45,47 +45,17 @@ jobs:
     - name: Run simulation
       run: java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
     
-    # Step 7: Debug the results directory
-    - name: Debug results directory
-      run: |
-        ls -la results/
-        if [ -f "results/simulation_results.csv" ]; then
-          head -20 results/simulation_results.csv
-        else
-          echo "simulation_results.csv not found!"
-        fi
-    
-    # Step 8: Create static index.html if needed
-    - name: Ensure index.html exists
-      run: |
-        if [ ! -f "results/index.html" ]; then
-          echo "<!DOCTYPE html><html><head><title>CloudSim Results</title></head><body><h1>CloudSim Results</h1><p>Please check the CSV file for results.</p></body></html>" > results/index.html
-        fi
-    
-    # Step 9: Create GitHub Pages content
+    # Step 7: Create GitHub Pages content
     - name: Prepare GitHub Pages directory
       run: |
-        # Create the docs directory
         mkdir -p docs
-        
-        # Copy actual simulation results
         cp results/index.html docs/index.html
+        cp results/styles.css docs/styles.css
+        cp results/script.js docs/script.js
         cp results/simulation_results.csv docs/simulation_results.csv
-        
-        # Copy any other assets needed for the webpage
-        if [ -d "src/assets" ]; then
-          mkdir -p docs/assets
-          cp -r src/assets/* docs/assets/
-        fi
-        
-        # Create .nojekyll file to disable Jekyll processing
         touch docs/.nojekyll
-        
-        # Check the contents of the docs directory
-        echo "Contents of docs directory:"
-        ls -la docs/
     
-    # Step 10: Deploy to GitHub Pages
+    # Step 8: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
