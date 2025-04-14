@@ -4,199 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CloudSim Auto-Scaling Simulation Results</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1, h2 { color: #2c3e50; }
-        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        .header { background-color: #2c3e50; color: white; padding: 20px; margin-bottom: 20px; }
-        .timestamp { font-style: italic; color: #7f8c8d; margin-bottom: 20px; }
-        pre { background-color: #f8f8f8; padding: 15px; border-radius: 5px; overflow-x: auto; }
-        .loading { text-align: center; padding: 20px; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="header">
         <div class="container">
             <h1>CloudSim Auto-Scaling Simulation Results</h1>
+            <div id="timestamp" class="timestamp">Loading simulation timestamp...</div>
         </div>
     </div>
+    
     <div class="container">
-        <div id="timestamp" class="timestamp">Loading simulation timestamp...</div>
+        <div class="dashboard">
+            <div class="dashboard-card">
+                <h3>Total Cloudlets</h3>
+                <div id="total-cloudlets" class="dashboard-value">-</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Executed Cloudlets</h3>
+                <div id="executed-cloudlets" class="dashboard-value">-</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Average Execution Time</h3>
+                <div id="avg-execution-time" class="dashboard-value">-</div>
+                <div class="unit">seconds</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>Total Scaling Events</h3>
+                <div id="total-scaling-events" class="dashboard-value">-</div>
+            </div>
+        </div>
         
-        <h2>Simulation Summary</h2>
-        <div id="cloudlet-summary"></div>
+        <div class="row">
+            <div class="col">
+                <div class="panel">
+                    <h2>VM Resource Utilization</h2>
+                    <div class="chart-container">
+                        <canvas id="utilization-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="panel">
+                    <h2>Scaling Events Timeline</h2>
+                    <div class="chart-container">
+                        <canvas id="scaling-timeline-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <h2>VM Execution Details</h2>
-        <div id="vm-execution"></div>
+        <div class="row">
+            <div class="col">
+                <div class="panel">
+                    <h2>VM Execution Details</h2>
+                    <div class="table-responsive" id="vm-execution"></div>
+                </div>
+            </div>
+        </div>
         
-        <h2>Auto-Scaling Statistics</h2>
-        <div id="auto-scaling"></div>
+        <div class="panel">
+            <h2>Auto-Scaling Statistics</h2>
+            <div class="table-responsive" id="auto-scaling"></div>
+        </div>
         
-        <h2>Detailed Scaling Events</h2>
-        <div id="scaling-events"></div>
+        <div class="panel">
+            <h2>Detailed Scaling Events</h2>
+            <div class="table-responsive" id="scaling-events"></div>
+        </div>
         
-        <h2>Current VM Utilization</h2>
-        <div id="vm-utilization"></div>
+        <div class="panel">
+            <h2>Current VM Utilization</h2>
+            <div class="table-responsive" id="vm-utilization"></div>
+        </div>
     </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 CloudSim Auto-Scaling Simulation. Generated with GitHub Actions CI/CD Pipeline.</p>
+        </div>
+    </footer>
 
-    <script>
-        // Function to fetch and parse CSV data
-        async function fetchCsvData() {
-            try {
-                const response = await fetch('simulation_results.csv');
-                const csvText = await response.text();
-                return parseCsv(csvText);
-            } catch (error) {
-                console.error('Error fetching CSV:', error);
-                document.body.innerHTML = '<div class="container"><h2>Error loading simulation data</h2><p>Please make sure simulation_results.csv exists and is accessible.</p></div>';
-            }
-        }
-
-        // Simple CSV parser function
-        function parseCsv(text) {
-            const sections = {};
-            let currentSection = null;
-            let headers = [];
-            
-            const lines = text.split('\n');
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                
-                // Skip empty lines
-                if (!line) continue;
-                
-                // Check if this is a section header (all caps with no commas)
-                if (line.toUpperCase() === line && !line.includes(',')) {
-                    currentSection = line;
-                    sections[currentSection] = {
-                        headers: [],
-                        data: []
-                    };
-                    // The next line should be headers
-                    if (i + 1 < lines.length) {
-                        headers = lines[i + 1].split(',');
-                        sections[currentSection].headers = headers;
-                        i++; // Skip the header line in the next iteration
-                    }
-                } else if (currentSection && line.includes(',')) {
-                    // This is a data line
-                    const values = line.split(',');
-                    const row = {};
-                    
-                    // Create an object with the headers as keys
-                    headers.forEach((header, index) => {
-                        row[header] = values[index] || '';
-                    });
-                    
-                    sections[currentSection].data.push(row);
-                } else if (currentSection === 'SIMULATION_RESULTS' && line.startsWith('Timestamp')) {
-                    // Special handling for timestamp
-                    sections.timestamp = line.split(',')[1];
-                }
-            }
-            
-            return sections;
-        }
-
-        // Function to create a table from data
-        function createTable(headers, data) {
-            const table = document.createElement('table');
-            
-            // Create header row
-            const thead = document.createElement('thead');
-            const headerRow = document.createElement('tr');
-            
-            headers.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = header.replace(/_/g, ' ');
-                headerRow.appendChild(th);
-            });
-            
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
-            
-            // Create data rows
-            const tbody = document.createElement('tbody');
-            
-            data.forEach(row => {
-                const tr = document.createElement('tr');
-                
-                headers.forEach(header => {
-                    const td = document.createElement('td');
-                    td.textContent = row[header];
-                    tr.appendChild(td);
-                });
-                
-                tbody.appendChild(tr);
-            });
-            
-            table.appendChild(tbody);
-            return table;
-        }
-
-        // Main function to load and display data
-        async function loadData() {
-            const data = await fetchCsvData();
-            
-            if (data) {
-                // Set timestamp
-                if (data.timestamp) {
-                    document.getElementById('timestamp').textContent = `Generated on: ${data.timestamp}`;
-                }
-                
-                // Cloudlet execution summary
-                if (data.CLOUDLET_EXECUTION_SUMMARY) {
-                    const summaryDiv = document.getElementById('cloudlet-summary');
-                    summaryDiv.appendChild(createTable(
-                        data.CLOUDLET_EXECUTION_SUMMARY.headers,
-                        data.CLOUDLET_EXECUTION_SUMMARY.data
-                    ));
-                }
-                
-                // VM execution details
-                if (data.VM_EXECUTION_DETAILS) {
-                    const vmDiv = document.getElementById('vm-execution');
-                    vmDiv.appendChild(createTable(
-                        data.VM_EXECUTION_DETAILS.headers,
-                        data.VM_EXECUTION_DETAILS.data
-                    ));
-                }
-                
-                // Auto-scaling statistics
-                if (data.AUTO_SCALING_STATISTICS) {
-                    const autoScalingDiv = document.getElementById('auto-scaling');
-                    autoScalingDiv.appendChild(createTable(
-                        data.AUTO_SCALING_STATISTICS.headers,
-                        data.AUTO_SCALING_STATISTICS.data
-                    ));
-                }
-                
-                // Detailed scaling events
-                if (data.DETAILED_SCALING_EVENTS) {
-                    const eventsDiv = document.getElementById('scaling-events');
-                    eventsDiv.appendChild(createTable(
-                        data.DETAILED_SCALING_EVENTS.headers,
-                        data.DETAILED_SCALING_EVENTS.data
-                    ));
-                }
-                
-                // Current VM utilization
-                if (data.CURRENT_VM_UTILIZATION) {
-                    const utilizationDiv = document.getElementById('vm-utilization');
-                    utilizationDiv.appendChild(createTable(
-                        data.CURRENT_VM_UTILIZATION.headers,
-                        data.CURRENT_VM_UTILIZATION.data
-                    ));
-                }
-            }
-        }
-
-        // Load data when page loads
-        window.addEventListener('DOMContentLoaded', loadData);
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
