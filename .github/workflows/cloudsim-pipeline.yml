@@ -32,7 +32,7 @@ jobs:
         java -cp "bin;lib/cloudsim-3.0.3.jar;lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
     
     - name: Upload simulation results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: simulation-results
         path: results/
