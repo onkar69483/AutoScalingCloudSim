@@ -37,42 +37,21 @@ jobs:
     - name: Run simulation
       run: java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
     
-    # Step 6: Create GitHub Pages content
-    - name: Create GitHub Pages content
+    # Step 6: Debug the results directory
+    - name: Debug results directory
       run: |
-        # Create the docs directory and basic content
+        ls -la results/
+        cat results/index.html | head -20
+    
+    # Step 7: Create GitHub Pages content
+    - name: Prepare GitHub Pages directory
+      run: |
+        # Create the docs directory
         mkdir -p docs
         
-        # Create a simple index.html
-        echo "<!DOCTYPE html>
-        <html>
-        <head>
-            <title>AutoScalingCloudSim Results</title>
-            <style>
-                body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-                h1 { color: #333; }
-                .results { margin-top: 20px; }
-                table { width: 100%; border-collapse: collapse; }
-                th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-                th { background-color: #f2f2f2; }
-            </style>
-        </head>
-        <body>
-            <h1>AutoScalingCloudSim Simulation Results</h1>
-            <p>This page displays the results of the CloudSim simulation.</p>
-            <div class='results'>
-                <h2>Latest Simulation</h2>
-                <p>Run date: $(date)</p>
-            </div>
-        </body>
-        </html>" > docs/index.html
-        
-        # Copy simulation results if they exist
-        if [ -f "results/simulation_results.csv" ]; then
-          cp results/simulation_results.csv docs/
-        else
-          echo "No simulation results found" > docs/simulation_results.txt
-        fi
+        # Copy actual simulation results
+        cp results/index.html docs/index.html
+        cp results/simulation_results.csv docs/simulation_results.csv
         
         # Create .nojekyll file to disable Jekyll processing
         touch docs/.nojekyll
@@ -81,7 +60,7 @@ jobs:
         echo "Contents of docs directory:"
         ls -la docs/
     
-    # Step 7: Deploy to GitHub Pages (simpler approach)
+    # Step 8: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
