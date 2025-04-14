@@ -5,7 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:
 
 jobs:
   build-and-run:
@@ -21,9 +21,9 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'temurin'  # OpenJDK distribution
+        distribution: 'temurin'
     
-    # Step 3: Create required directories
+    # Step 3: Create directories
     - name: Create directories
       run: |
         mkdir -p bin
@@ -37,56 +37,53 @@ jobs:
     - name: Run simulation
       run: java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
     
-    # Step 6: Ensure results exist
-    - name: Ensure results exist
+    # Step 6: Create GitHub Pages content
+    - name: Create GitHub Pages content
       run: |
-        if [ ! -f "results/simulation_results.csv" ]; then
-          echo "No simulation results found, creating placeholder"
-          mkdir -p results
-          echo "timestamp,vm_count,host_utilization,status" > results/simulation_results.csv
-          echo "$(date -u +"%Y-%m-%d %H:%M:%S"),0,0.0,placeholder" >> results/simulation_results.csv
-        fi
-    
-    # Step 7: Prepare GitHub Pages (only on main/master)
-    - name: Prepare GitHub Pages
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      run: |
-        # Create docs directory
+        # Create the docs directory and basic content
         mkdir -p docs
         
-        # Copy results files
-        cp -r results/* docs/ || echo "No results to copy"
-        
-        # Create .nojekyll file to disable Jekyll processing completely
-        touch docs/.nojekyll
-        
-        # Create simple index.html
-        echo "<html>
-          <head>
-            <title>CloudSim Simulation Results</title>
+        # Create a simple index.html
+        echo "<!DOCTYPE html>
+        <html>
+        <head>
+            <title>AutoScalingCloudSim Results</title>
             <style>
-              body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6 }
-              table { border-collapse: collapse; width: 100% }
-              th, td { border: 1px solid #ddd; padding: 8px; text-align: left }
-              th { background-color: #f2f2f2 }
+                body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+                h1 { color: #333; }
+                .results { margin-top: 20px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+                th { background-color: #f2f2f2; }
             </style>
-          </head>
-          <body>
-            <h1>CloudSim Simulation Results</h1>
-            <p>Last updated: $(date -u)</p>
-            <p>View the <a href='simulation_results.csv'>simulation results</a>.</p>
-          </body>
+        </head>
+        <body>
+            <h1>AutoScalingCloudSim Simulation Results</h1>
+            <p>This page displays the results of the CloudSim simulation.</p>
+            <div class='results'>
+                <h2>Latest Simulation</h2>
+                <p>Run date: $(date)</p>
+            </div>
+        </body>
         </html>" > docs/index.html
         
-        # List contents for debugging
+        # Copy simulation results if they exist
+        if [ -f "results/simulation_results.csv" ]; then
+          cp results/simulation_results.csv docs/
+        else
+          echo "No simulation results found" > docs/simulation_results.txt
+        fi
+        
+        # Create .nojekyll file to disable Jekyll processing
+        touch docs/.nojekyll
+        
+        # Check the contents of the docs directory
         echo "Contents of docs directory:"
         ls -la docs/
     
-    # Step 8: Deploy to GitHub Pages - ONLY using the JamesIves action
+    # Step 7: Deploy to GitHub Pages (simpler approach)
     - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: docs
         branch: gh-pages
-        clean: true
