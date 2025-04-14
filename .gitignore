@@ -1,0 +1,34 @@
+# IDE-specific
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Build and output directories
+/bin/
+out/
+build/
+target/
+*.class
+
+# Eclipse
+.settings/
+.project
+.classpath
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+*.swp

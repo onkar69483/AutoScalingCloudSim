@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudSim Auto-Scaling Simulation Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1, h2 { color: #2c3e50; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .header { background-color: #2c3e50; color: white; padding: 20px; margin-bottom: 20px; }
+        .timestamp { font-style: italic; color: #7f8c8d; margin-bottom: 20px; }
+        pre { background-color: #f8f8f8; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>CloudSim Auto-Scaling Simulation Results</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="timestamp">Generated on: 2025-04-14 19:22:37</div>
+        <pre>
+========== SIMULATION RESULTS ==========
+Cloudlets Executed: 20 of 20
+Average Cloudlet Execution Time: 25.757 seconds
+
+VM Execution Details:
+-------------------------------------------------
+VM ID | Execution Time (s) | Average Cloudlets
+-------------------------------------------------
+   0  |                 0 |                4
+   1  |                 0 |                4
+   2  |                 0 |                4
+   3  |                 0 |                4
+   4  |                 0 |                4
+-------------------------------------------------
+
+========== AUTO-SCALING STATISTICS ==========
+VM Scaling Summary:
+--------------------------------------------------
+VM ID | Original PEs | Final PEs | Scaling Events
+--------------------------------------------------
+   0  |           2 |         3 |              7
+   1  |           2 |         3 |              7
+   2  |           2 |         3 |              7
+   3  |           2 |         3 |              7
+   4  |           2 |         3 |              7
+--------------------------------------------------
+
+Detailed Scaling Events:
+-----------------------------------------------------------------------
+Time | VM ID | CPU Util | Old PEs | New PEs | Old Host | New Host
+-----------------------------------------------------------------------
+   7 |     3 |  70.245% |       2 |       3 |        0 |        1
+   8 |     1 |  71.166% |       2 |       3 |        0 |        0
+   8 |     2 |  70.384% |       2 |       3 |        0 |        0
+  10 |     0 |  70.663% |       2 |       3 |        0 |        2
+  10 |     4 |  78.173% |       2 |       3 |        0 |        0
+  12 |     3 |  78.005% |       2 |       3 |        1 |        1
+  13 |     1 |  78.035% |       2 |       3 |        0 |        0
+  13 |     2 |  79.213% |       2 |       3 |        0 |        0
+  15 |     0 |  85.286% |       2 |       3 |        2 |        2
+  15 |     4 |  85.514% |       2 |       3 |        0 |        0
+  17 |     3 |   81.54% |       2 |       3 |        1 |        1
+  18 |     1 |  81.884% |       2 |       3 |        0 |        0
+  18 |     2 |  86.865% |       2 |       3 |        0 |        0
+  20 |     0 |    90.8% |       2 |       3 |        2 |        2
+  20 |     4 |  89.086% |       2 |       3 |        0 |        0
+  22 |     3 |  90.502% |       2 |       3 |        1 |        1
+  23 |     1 |  85.748% |       2 |       3 |        0 |        0
+  23 |     2 |  94.592% |       2 |       3 |        0 |        0
+  25 |     0 |  94.544% |       2 |       3 |        2 |        2
+  25 |     4 |  92.462% |       2 |       3 |        0 |        0
+  27 |     3 |  90.599% |       2 |       3 |        1 |        1
+  28 |     1 |  85.112% |       2 |       3 |        0 |        0
+  28 |     2 |  85.268% |       2 |       3 |        0 |        0
+  30 |     0 |  88.897% |       2 |       3 |        2 |        2
+  30 |     4 |    87.4% |       2 |       3 |        0 |        0
+  32 |     3 |  87.217% |       2 |       3 |        1 |        1
+  33 |     1 |  88.613% |       2 |       3 |        0 |        0
+  33 |     2 |  82.149% |       2 |       3 |        0 |        0
+  35 |     0 |  80.868% |       2 |       3 |        2 |        2
+  35 |     4 |  85.658% |       2 |       3 |        0 |        0
+  37 |     3 |  82.956% |       2 |       3 |        1 |        1
+  38 |     1 |  81.969% |       2 |       3 |        0 |        0
+  38 |     2 |   80.65% |       2 |       3 |        0 |        0
+  40 |     0 |  74.353% |       2 |       3 |        2 |        2
+  40 |     4 |  71.775% |       2 |       3 |        0 |        0
+-----------------------------------------------------------------------
+
+Current VM Utilization:
+------------------------
+VM ID | CPU Utilization
+------------------------
+   4  |        92.462%
+   1  |        47.293%
+   2  |        85.268%
+   3  |        78.005%
+   3  |         81.54%
+   1  |        78.035%
+   4  |        71.775%
+   4  |          87.4%
+   0  |          90.8%
+   0  |        52.667%
+   3  |        90.502%
+   4  |        54.414%
+   0  |        85.286%
+   3  |        82.956%
+   4  |        85.514%
+   1  |        71.166%
+   1  |        88.613%
+   0  |        80.868%
+   0  |        94.544%
+   2  |        79.213%
+   1  |        81.884%
+   2  |        86.865%
+   3  |        51.418%
+   4  |        85.658%
+   2  |        48.533%
+   4  |        78.173%
+   3  |        87.217%
+   2  |        70.384%
+   2  |        82.149%
+   2  |        94.592%
+   3  |        90.599%
+   3  |        70.245%
+   1  |        85.112%
+   0  |        88.897%
+   0  |        74.353%
+   2  |         80.65%
+   0  |        70.663%
+   4  |        89.086%
+   1  |        85.748%
+   1  |        81.969%
+------------------------
+</pre>
+        <p>The simulation results are also available in CSV format <a href="simulation_results.csv">here</a>.</p>
+    </div>
+</body>
+</html>
