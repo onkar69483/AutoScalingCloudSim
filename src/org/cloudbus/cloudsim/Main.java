@@ -59,12 +59,11 @@ public class Main {
             
             generateResults(finishedCloudlets, consoleOutput, csvOutput);
             
-            // Write results to files
-            writeResultsToHtml(consoleOutput.toString());
+            // Only write CSV file
             writeResultsToCsv(csvOutput.toString());
             
             Log.printLine("Simulation completed successfully at time: " + CloudSim.clock());
-            Log.printLine("Results saved to results/index.html and results/simulation_results.csv");
+            Log.printLine("Results saved to results/simulation_results.csv");
         } catch (Exception e) {
             e.printStackTrace();
             Log.printLine("Simulation terminated due to an error");
@@ -343,47 +342,7 @@ public class Main {
         Log.print(consoleOutput.toString());
     }
     
-    private static void writeResultsToHtml(String content) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("results/index.html"));
-            writer.write("<!DOCTYPE html>\n");
-            writer.write("<html lang=\"en\">\n");
-            writer.write("<head>\n");
-            writer.write("    <meta charset=\"UTF-8\">\n");
-            writer.write("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
-            writer.write("    <title>CloudSim Auto-Scaling Simulation Results</title>\n");
-            writer.write("    <style>\n");
-            writer.write("        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; color: #333; }\n");
-            writer.write("        .container { max-width: 1200px; margin: 0 auto; }\n");
-            writer.write("        h1, h2 { color: #2c3e50; }\n");
-            writer.write("        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }\n");
-            writer.write("        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }\n");
-            writer.write("        th { background-color: #f2f2f2; }\n");
-            writer.write("        tr:nth-child(even) { background-color: #f9f9f9; }\n");
-            writer.write("        .header { background-color: #2c3e50; color: white; padding: 20px; margin-bottom: 20px; }\n");
-            writer.write("        .timestamp { font-style: italic; color: #7f8c8d; margin-bottom: 20px; }\n");
-            writer.write("        pre { background-color: #f8f8f8; padding: 15px; border-radius: 5px; overflow-x: auto; }\n");
-            writer.write("    </style>\n");
-            writer.write("</head>\n");
-            writer.write("<body>\n");
-            writer.write("    <div class=\"header\">\n");
-            writer.write("        <div class=\"container\">\n");
-            writer.write("            <h1>CloudSim Auto-Scaling Simulation Results</h1>\n");
-            writer.write("        </div>\n");
-            writer.write("    </div>\n");
-            writer.write("    <div class=\"container\">\n");
-            writer.write("        <div class=\"timestamp\">Generated on: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + "</div>\n");
-            writer.write("        <pre>" + content.replace("<", "&lt;").replace(">", "&gt;") + "</pre>\n");
-            writer.write("        <p>The simulation results are also available in CSV format <a href=\"simulation_results.csv\">here</a>.</p>\n");
-            writer.write("    </div>\n");
-            writer.write("</body>\n");
-            writer.write("</html>");
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.printLine("Error writing HTML results: " + e.getMessage());
-        }
-    }
+    // Removed writeResultsToHtml method as we want index.html to be static
     
     private static void writeResultsToCsv(String content) {
         try {
