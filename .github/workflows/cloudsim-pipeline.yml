@@ -27,7 +27,7 @@ jobs:
         mkdir -p results
     
     - name: Compile code
-      run: javac -Xlint:unchecked -cp "lib/cloudsim-3.0.3.jar" -d bin src/org/cloudbus/cloudsim/*.java
+      run: javac -cp "lib/cloudsim-3.0.3.jar" -d bin src/org/cloudbus/cloudsim/*.java
     
     - name: Run simulation
       run: java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
@@ -37,14 +37,14 @@ jobs:
       run: |
         mkdir -p docs
         cp -r results/* docs/
-        # Create a simple Jekyll configuration file
+        touch docs/.nojekyll
         echo "theme: jekyll-theme-cayman" > docs/_config.yml
+        echo "<html><head><title>CloudSim Simulation Results</title></head><body><h1>CloudSim Simulation Results</h1><p>View the <a href='simulation_results.csv'>simulation results</a>.</p></body></html>" > docs/index.html
     
-    - name: Commit and push results
+    - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add results/ docs/
-        git commit -m "Update simulation results [skip ci]" || echo "No changes to commit"
-        git push origin HEAD:${GITHUB_REF#refs/heads/} || echo "Nothing to push"
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: docs
+        branch: gh-pages
+        clean: true
