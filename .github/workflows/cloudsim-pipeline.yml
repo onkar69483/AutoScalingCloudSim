@@ -14,8 +14,6 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Get full git history
     
     - name: Set up JDK 11
       uses: actions/setup-java@v3
@@ -31,17 +29,22 @@ jobs:
     - name: Compile code
       run: javac -Xlint:unchecked -cp "lib/cloudsim-3.0.3.jar" -d bin src/org/cloudbus/cloudsim/*.java
     
-    - name: Verify compiled classes
-      run: ls -R bin
-    
     - name: Run simulation
       run: java -cp "bin:lib/cloudsim-3.0.3.jar:lib/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.Main
     
-    - name: Commit Updated Results
+    - name: Create docs directory for GitHub Pages
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      run: |
+        mkdir -p docs
+        cp -r results/* docs/
+        # Create a simple Jekyll configuration file
+        echo "theme: jekyll-theme-cayman" > docs/_config.yml
+    
+    - name: Commit and push results
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-        git add results/index.html results/simulation_results.csv || echo "Nothing to add"
-        git commit -m "Auto-update simulation report [skip ci]" || echo "No changes to commit"
-        git push origin HEAD:${{ github.ref }} || echo "Nothing to push"
+        git add results/ docs/
+        git commit -m "Update simulation results [skip ci]" || echo "No changes to commit"
+        git push origin HEAD:${GITHUB_REF#refs/heads/} || echo "Nothing to push"
