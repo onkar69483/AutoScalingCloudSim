@@ -106,7 +106,68 @@ The HTML report includes:
 - Detailed scaling events
 - Current VM utilization
 
+### ✅ Cloudlet Execution Summary
+
+| Metric                       | Value        |
+|-----------------------------|--------------|
+| Cloudlets Executed          | 20 of 20     |
+| Average Execution Time      | 25.321 sec   |
+
 ---
+
+### 🖥 VM Execution Details
+
+| VM ID | Execution Time (s) | Avg. Cloudlets |
+|-------|---------------------|----------------|
+| 0     | 0                   | 4              |
+| 1     | 0                   | 4              |
+| 2     | 0                   | 4              |
+| 3     | 0                   | 4              |
+| 4     | 0                   | 4              |
+
+---
+
+## 📈 Auto-Scaling Statistics
+
+### ⚙️ VM Scaling Summary
+
+| VM ID | Original PEs | Final PEs | Scaling Events |
+|-------|---------------|-----------|----------------|
+| 0     | 2             | 3         | 8              |
+| 1     | 2             | 3         | 7              |
+| 2     | 2             | 3         | 7              |
+| 3     | 2             | 3         | 7              |
+| 4     | 2             | 3         | 7              |
+
+---
+
+### 📅 Detailed Scaling Events (Sample)
+
+| Time | VM ID | CPU Util | Old PEs | New PEs | Old Host | New Host |
+|------|-------|----------|---------|---------|----------|----------|
+| 8    | 0     | 72.77%   | 2       | 3       | 0        | 1        |
+| 8    | 1     | 72.62%   | 2       | 3       | 0        | 0        |
+| 9    | 2     | 71.35%   | 2       | 3       | 0        | 2        |
+| 13   | 0     | 81.26%   | 2       | 3       | 1        | 1        |
+| 23   | 3     | 91.81%   | 2       | 3       | 0        | 0        |
+| 34   | 2     | 83.48%   | 2       | 3       | 2        | 2        |
+
+> _Only a subset of events shown here. Full details in `results/index.html`._
+
+---
+
+### 📊 Current VM Utilization (Sample)
+
+| VM ID | CPU Utilization |
+|-------|-----------------|
+| 0     | 72.77%          |
+| 1     | 89.45%          |
+| 2     | 87.61%          |
+| 3     | 91.21%          |
+| 4     | 86.64%          |
+
+> _VMs are monitored periodically, and these values reflect a snapshot from the simulation._
+
 
 ## 🔄 Customizing the Simulation
 
